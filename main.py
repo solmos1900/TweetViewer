@@ -6,24 +6,10 @@ from urllib.parse import urlencode, quote_plus
 import json
 from twitteraccess import *
 
-#
-# In HW8 Q2 and HW 9, you will use two Google services, Google Static Maps API
-# and Google Geocoding API.  Both require use of an API key.
-# 
-# When you have the API key, put it between the quotes in the string below
-GOOGLEAPIKEY = "AIzaSyCOo96diwy6prERZpCr7K3qixyIdrxm_Sg"
 
-# To run the HW9 program, call the last function in this file: HW9().
+#GOOGLEAPIKEY = 
 
-# The Globals class demonstrates a better style of managing "global variables"
-# than simply scattering the globals around the code and using "global x" within
-# functions to identify a variable as global.
-#
-# We make all of the variables that we wish to access from various places in the
-# program properties of this Globals class.  They get initial values here
-# and then can be referenced and set anywhere in the program via code like
-# e.g. Globals.zoomLevel = Globals.zoomLevel + 1
-#
+
 class Globals:
    
    rootWindow = None
@@ -49,14 +35,7 @@ class Globals:
    mapFileName = 'googlemap.gif'
    mapSize = 400
    zoomLevel = 9
-   
-# Given a string representing a location, return 2-element tuple
-# (latitude, longitude) for that location 
-#
-# See https://developers.google.com/maps/documentation/geocoding/
-# for details about Google's geocoding API.
-#
-#
+
 def geocodeAddress(addressString):
    urlbase = "https://maps.googleapis.com/maps/api/geocode/json?address="
    geoURL = urlbase + quote_plus(addressString)
@@ -77,18 +56,7 @@ def geocodeAddress(addressString):
       result = (float(loc['lat']),float(loc['lng']))
    return result
 
-# Contruct a Google Static Maps API URL that specifies a map that is:
-# - is centered at provided latitude lat and longitude long
-# - is "zoomed" to the Google Maps zoom level in Globals.zoomLevel
-# - Globals.mapSize-by-Globals.mapsize in size (in pixels), 
-# - will be provided as a gif image
-#
-# See https://developers.google.com/maps/documentation/static-maps/
-#
-# YOU WILL NEED TO MODIFY THIS TO BE ABLE TO
-# 1) DISPLAY A PIN ON THE MAP
-# 2) SPECIFY MAP TYPE - terrain vs road vs ...
-#
+
 def getMapUrl():
    lat, lng = geocodeAddress(Globals.mapLocation)
    urlbase = "http://maps.google.com/maps/api/staticmap?"
@@ -115,11 +83,6 @@ def displayMapAndTweets():
    Globals.mapLabel.mapImage = mapImage
    Globals.searchEntry
    
-   #hopefully displays the tweet text in the tweetText label
-   
-   #localTweet = Globals.tweets[Globals.currentTweetIndex]['full_text']
-   #print(localTweet)
-   #Globals.tweetText.configure(text = localTweet)
    
 def generateMarkerString(currentTweetIndex, tweetLatLonList, mapCenterLatLon):
     centerList = []
@@ -138,11 +101,8 @@ def generateMarkerString(currentTweetIndex, tweetLatLonList, mapCenterLatLon):
 
    
 def readEntryDisplayMapAndTwitter():
-   #### you should change this function to read from the location from an Entry widget
-   #### instead of using the default location
    authTwitter()
    
-   #twitterKeyword = searchTwitter(Globals.twitterEntry.get())
    Globals.tweets = searchTwitter(Globals.twitterEntry.get(), Globals.searchEntry.get())
    
    text = Globals.tweets[(Globals.currentTweetIndex)]['full_text']
@@ -169,11 +129,6 @@ def initializeGUIetc():
    mainFrame = tkinter.Frame(Globals.rootWindow) 
    mainFrame.pack()
 
-   # until you add code, pressing this button won't change the map (except
-   # once, to the Beijing location "hardcoded" into readEntryAndDisplayMap)
-   # you need to add an Entry widget that allows you to type in an address
-   # The click function should extract the location string from the Entry widget
-   # and create the appropriate map.
    topFrame = tkinter.Frame(mainFrame)
    topFrame.pack()
    
@@ -191,7 +146,6 @@ def initializeGUIetc():
    readEntryAndDisplayMapButton = tkinter.Button(mainFrame, text="Show me the map and twitter results!", command=readEntryDisplayMapAndTwitter)
    readEntryAndDisplayMapButton.pack()
 
-   # we use a tkinter Label to display the map image
    Globals.mapLabel = tkinter.Label(mainFrame, width=Globals.mapSize, bd=2, relief=tkinter.FLAT)
    Globals.mapLabel.pack()
    
@@ -202,7 +156,6 @@ def initializeGUIetc():
    decreaseButton.pack(side=tkinter.LEFT)
    increaseButton = tkinter.Button(bottomFrame, text="+", command=increaseBy1)
    increaseButton.pack(side=tkinter.LEFT)
-   # show the current count in a label below the buttons
    Globals.countLabel = tkinter.Label(bottomFrame, text="Zoom: 0")
    Globals.countLabel.pack(side = tkinter.BOTTOM)
        
@@ -262,7 +215,6 @@ def decreaseBy1():
         displayMapAndTweets()
     updateCountLabel()
 
-# "helper" function used by both callbacks
 def updateCountLabel():
     Globals.countLabel.configure(text="Zoom: {}".format(Globals.counter))
 
